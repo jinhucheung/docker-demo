@@ -1,0 +1,27 @@
+version: '3.4'
+
+x-postgres-variables: &postgres-variables
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: pass
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
+
+services:
+  postgres:
+    image: postgres:12
+    environment: *postgres-variables
+    volumes:
+      - ./table.sql.gz:/docker-entrypoint-initdb.d/table.sql.gz
+
+  docker_demo:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: docker_demo_app
+    environment: *postgres-variables
+    volumes:
+      - ./wait-for-postgres.sh:/app/wait-for-postgres.sh
+    command: ['./wait-for-postgres.sh', 'python', 'run.py']
+    depends_on:
+      - postgres

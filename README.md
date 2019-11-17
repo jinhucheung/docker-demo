@@ -12,27 +12,9 @@ Clone this repository:
 $ git clone git@github.com:jinhucheung/docker-demo.git
 ```
 
-Then build app image:
+Then start app:
 
 ```
 $ cd docker-demo
-$ docker build -t jinhucheung/docker-demo .
-```
-
-Create docker demo network:
-
-```
-$ docker network create docker-demo-network
-```
-
-Run Postgres container:
-
-```
-$ docker run --rm --name postgre-app --network docker-demo-network -e POSTGRES_PASSWORD=1234 -d postgres
-```
-
-Run docker demo app:
-
-```
-$ docker run --rm --network docker-demo-network --env-file .env jinhucheung/docker-demo
+$ docker-compose up
 ```
