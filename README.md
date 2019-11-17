@@ -19,8 +19,20 @@ $ cd docker-demo
 $ docker build -t jinhucheung/docker-demo .
 ```
 
-Run app after building:
+Create docker demo network:
 
 ```
-$ docker run --rm jinhucheung/docker-demo
+$ docker network create docker-demo-network
+```
+
+Run Postgres container:
+
+```
+$ docker run --rm --name postgre-app --network docker-demo-network -e POSTGRES_PASSWORD=1234 -d postgres
+```
+
+Run docker demo app:
+
+```
+$ docker run --rm --network docker-demo-network --env-file .env jinhucheung/docker-demo
 ```
