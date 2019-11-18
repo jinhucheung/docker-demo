@@ -11,8 +11,17 @@ services:
   postgres:
     image: postgres:12
     environment: *postgres-variables
+
+  restore_postgres:
+    image: postgres:12
+    environment: *postgres-variables
     volumes:
       - ./table.sql.gz:/docker-entrypoint-initdb.d/table.sql.gz
+      - ./wait-for-postgres.sh:/usr/bin/wait-for-postgres.sh
+      - ./restore_postgres.sh:/usr/bin/restore_postgres.sh
+    command: ['/usr/bin/wait-for-postgres.sh', '/usr/bin/restore_postgres.sh']
+    depends_on:
+      - postgres
 
   docker_demo:
     build:
@@ -24,4 +33,4 @@ services:
       - ./wait-for-postgres.sh:/app/wait-for-postgres.sh
     command: ['./wait-for-postgres.sh', 'python', 'run.py']
     depends_on:
-      - postgres
+      - restore_postgres
